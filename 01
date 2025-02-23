@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>针对性旅拍服务平台</title>
+    <style>
+        /* 全局样式 */
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #f0e8ca, #b6ede6); /* 从顶部的黄色渐变到底部的橙色 */
+    color: #333;
+}
+
+        /* 头部样式 */
+        header {
+            background-color: #d0f7f0;
+            color: rgb(137, 195, 243);
+            text-align: center;
+            padding: 30px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        /* 主体内容样式 */
+        section {
+            padding: 30px;
+            margin: 30px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            max-width: 800px;
+            transition: all 0.3s ease;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 15px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            background-color: #004085;
+        }
+
+        /* 摄影师卡片样式 */
+        .photographer {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .photographer:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .photographer h3 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .photographer p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        /* 作品展示模态框样式 */
+        .works-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .works-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        #close-modal:hover {
+            color: #007BFF;
+        }
+
+        #works-images img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 响应式布局 */
+        @media (max-width: 768px) {
+            section {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            button {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>针对性旅拍服务平台</h1>
+    </header>
+    <!-- 注册页面 -->
+    <section id="register">
+        <h2>注册</h2>
+        <form id="register-form">
+            <label for="reg-username">用户名:</label>
+            <input type="text" id="reg-username" required><br>
+            <label for="reg-password">密码:</label>
+            <input type="password" id="reg-password" required><br>
+            <label for="reg-email">邮箱:</label>
+            <input type="email" id="reg-email" required><br>
+            <button type="submit">注册</button>
+            <button type="button" onclick="showPage('login')">返回登录</button>
+        </form>
+    </section>
+    <!-- 登录页面 -->
+    <section id="login" class="active">
+        <h2>登录</h2>
+        <form id="login-form">
+            <label for="login-username">用户名:</label>
+            <input type="text" id="login-username" required><br>
+            <label for="login-password">密码:</label>
+            <input type="password" id="login-password" required><br>
+            <button type="submit">登录</button>
+            <button type="button" onclick="showPage('register')">注册</button>
+        </form>
+    </section>
+    <!-- 筛选条件界面 -->
+    <section id="filter-section">
+        <h2>筛选摄影师</h2>
+        <label for="gender">选择性别:</label>
+        <select id="gender">
+            <option value="all">全部</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+        <label for="personality">选择性格:</label>
+        <select id="personality">
+            <option value="all">全部</option>
+            <option value="内向">内向</option>
+            <option value="外向">外向</option>
+        </select>
+        <label for="style">选择擅长风格:</label>
+        <select id="style">
+            <option value="all">全部</option>
+            <option value="人像">人像</option>
+            <option value="风景">风景</option>
+            <option value="婚礼">婚礼</option>
+            <option value="产品">产品</option>
+        </select>
+        <button id="filter-button">下一步</button>
+        <button id="back-to-login" style="margin-top: 10px;">返回登录</button>
+    </section>
+    <!-- 摄影师列表界面 -->
+    <section id="photographer-results">
+        <h2>推荐摄影师</h2>
+        <p>平台采用实时监控的安保系统，保障您的旅拍安全。</p>
+        <div id="photographer-list"></div>
+        <button id="back-to-filter">上一步</button>
+        <button id="next-to-service">下一步</button>
+    </section>
+    <!-- 服务和设备选择界面 -->
+    <section id="service-section">
+        <h2>选择服务和设备</h2>
+        <label for="makeup-service">化妆服务:</label>
+        <select id="makeup-service">
+            <option value="none">无</option>
+            <option value="home-service">上门服务</option>
+            <option value="store-service">到店服务</option>
+        </select>
+        <label for="equipment">设备选择:</label>
+        <select id="equipment">
+            <option value="none">无</option>
+            <option value="dji">大疆</option>
+            <option value="ccd">CCD</option>
+            <option value="canon">佳能</option>
+            <option value="panasonic">松下</option>
+            <option value="sony">索尼</option>
+            <option value="gopro">GoPro</option>
+        </select>
+        <button id="back-to-results">上一步</button>
+        <button id="submit-order">提交订单</button>
+    </section>
+
+    <!-- 作品展示模态框 -->
+    <div class="works-modal" id="works-modal">
+        <div class="works-content" id="works-content">
+            <button id="close-modal">&times;</button>
+            <div id="works-images"></div>
+        </div>
+    </div>
+    <script>
+        // 显示指定页面
+        function showPage(pageId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // 模拟用户数据库
+        const users = [];
+
+        // 注册表单提交事件
+        document.getElementById('register-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const regUsername = document.getElementById('reg-username').value;
+            const regPassword = document.getElementById('reg-password').value;
+            const regEmail = document.getElementById('reg-email').value;
+
+            // 模拟注册成功
+            users.push({ username: regUsername, password: regPassword, email: regEmail });
+            alert('注册成功，请返回登录。');
+            showPage('login');
+        });
+        // 登录表单提交事件
+        document.getElementById('login-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const loginUsername = document.getElementById('login-username').value;
+            const loginPassword = document.getElementById('login-password').value;
+
+            // 模拟验证用户名和密码
+            const user = users.find(u => u.username === loginUsername && u.password === loginPassword);
+            if (user) {
+                alert('登录成功！');
+                showPage('filter-section');
+            } else {
+                alert('用户名或密码错误，请重试。');
+            }
+        });
+// 定义特定的摄影师数据
+const photographers = [
+            // 人像风格
+            { name: "林悦", gender: "女", personality: "外向", style: "人像", distance: "2 公里", works: ["https://www.xiaohongshu.com/explore/6749cd00000000000202e330?xsec_token=ABTPcTQobvglSnrfIv2bRiWL2BozeBi_ZKBS_-ZDbcJsY=&xsec_source=pc_search&source=unknown ", "https://www.xiaohongshu.com/explore/66c3dcbe000000001f03bb1f?xsec_token=ABRZGCiJNFiZb5EQuigUDBlvPmUggRVSk5xN3Ldee77D0=&xsec_source=pc_search&source=unknown ", "https://www.xiaohongshu.com/explore/663cbb0d000000001e033350?xsec_token=ABcn7feLqdrTx-gIz5yGmJ-A1RDGfFbC3oXANT7D6-Ais=&xsec_source=pc_search&source=unknown "] },
+            { name: "陈阳", gender: "男", personality: "内向", style: "人像", distance: "3 公里", works: ["https://www.xiaohongshu.com/explore/67b9a5bd000000002a0025c0?xsec_token=ABlmUH70_65pZ5QCvyq6OUtdusHeYpWDGX7meFPUCrSPw=&xsec_source=pc_search&source=unknown", "https://via.placeholder.com/300x200?text=Portrait+Work+5 "] },
+            { name: "苏瑶", gender: "女", personality: "外向", style: "人像", distance: "4 公里", works: ["https://www.xiaohongshu.com/explore/6725cf90000000003c01f8c1?xsec_token=AB7oIp8HuWIy2a9ZItVrEb0fVf7gHR4_8mZyqtZ8h0UFc=&xsec_source=pc_search&source=unknown "] },
+            { name: "王小冉", gender: "女", personality: "内向", style: "人像", distance: "6 公里", works: ["https://www.xiaohongshu.com/explore/671e23670000000021005085?xsec_token=ABQshRYYmwhqDTEw3bN3WjmhpQr4W5We5QPNI9HxnTB3Q=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Portrait+Work+3 "] },
+            { name: "陈建平", gender: "男", personality: "内向", style: "人像", distance: "5 公里", works: ["https://www.xiaohongshu.com/explore/64f84858000000001d017c5a?xsec_token=ABJgCCg_i1G8SQQz3RQctuwI_zKtIpGTPQTLJLRm0ELuA=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Portrait+Work+5 "] },
+            { name: "易苏苏", gender: "女", personality: "内向", style: "人像", distance: "6 公里", works: ["https://www.xiaohongshu.com/explore/67831e1a0000000018011865?xsec_token=ABitFST5Ak_jLJJSu1qeBrzpFabY3SSxVFQTjHIUYg5fI=&xsec_source=pc_search&source=unknown "] },
+            { name: "苏一程", gender: "男", personality: "外向", style: "人像", distance: "4 公里", works: ["https://www.xiaohongshu.com/explore/651a3c7c000000001a020c4b?xsec_token=ABXj4attxQZbbEt74QTUn4hLm6Sk9ClTLVaOKdhhuQXcE=&xsec_source=pc_search&source=unknown "] },
+            { name: "柳达意", gender: "男", personality: "外向", style: "人像", distance: "6 公里", works: ["https://www.xiaohongshu.com/explore/63820e2b0000000022036788?xsec_token=ABtLH5KKt6O1F9wTPaJuBq6PYnPcqaTJZVBwU2plyTB2U=&xsec_source=pc_search&source=unknown "] },
+           // 风景风格
+           { name: "赵峰", gender: "男", personality: "外向", style: "风景", distance: "1 公里", works: ["https://www.xiaohongshu.com/explore/67355a6f000000001b02e52f?xsec_token=ABcXYrnZ5O_bOkXrspNqMkaWEX138BOnoKWtBW6hNURNM=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Landscape+Work+2 "] },
+            { name: "刘佳", gender: "女", personality: "内向", style: "风景", distance: "5 公里", works: ["https://www.xiaohongshu.com/explore/66dd97e2000000002603edaa?xsec_token=ABmU1BB4tD2dB8V0A4iZm1g8IEwpWX9_7TkKt4T6gk4a8=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Landscape+Work+4 ", "https://via.placeholder.com/300x200?text=Landscape+Work+5 "] },
+            { name: "张宇", gender: "男", personality: "外向", style: "风景", distance: "3 公里", works: ["https://www.xiaohongshu.com/explore/676e13f4000000000902c70f?xsec_token=ABhceKO569VBMqMpnYUP6qj1d9M5byQo4lIvM29CS9lqE=&xsec_source=pc_search&source=unknown "] },
+            { name: "林欣欣", gender: "女", personality: "外向", style: "风景", distance: "2 公里", works: ["https://www.xiaohongshu.com/explore/665e9a05000000001500bf86?xsec_token=AB8FMOtUxUCEbLa1-84qgiRf6ZTZvRJ9JjUii88csnT5A=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Portrait+Work+2 ", "https://via.placeholder.com/300x200?text=Portrait+Work+3 "] },
+            { name: "刘一阳", gender: "男", personality: "内向", style: "风景", distance: "3 公里", works: ["https://www.xiaohongshu.com/explore/65e02662000000000b00c130?xsec_token=ABTfRTiD18AlNcdrJ_bJQdvwf9w7ARYxs8f2EadorPYts=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Portrait+Work+5 "] },
+            { name: "吕青青", gender: "女", personality: "外向", style: "风景", distance: "4 公里", works: ["https://www.xiaohongshu.com/explore/67621d470000000014025324?xsec_token=ABq4L7hIhBVfUvG9lIrEwrcACXyaTGNv--dmdtq8HTybE=&xsec_source=pc_search&source=unknown "] },
+            { name: "柳一心", gender: "女", personality: "内向", style: "风景", distance: "6 公里", works: ["https://www.xiaohongshu.com/explore/67715199000000000b00f320?xsec_token=ABScOO6y9aZd-idZyJ1KgjZM69PSgXQzjSYdUlcyXKLQw=&xsec_source=pc_search&source=unknown"] },
+            // 婚礼风格
+            { name: "王慧", gender: "女", personality: "外向", style: "婚礼", distance: "4 公里", works: ["https://www.xiaohongshu.com/explore/6644407d000000001e02f025?xsec_token=AB2QNWwyg8GWrp1y1HbSGGayB2wg805htiF01U2-qwM40=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Wedding+Work+2 "] },
+            { name: "李翔", gender: "男", personality: "内向", style: "婚礼", distance: "2 公里", works: ["https://www.xiaohongshu.com/explore/67a4c6ad000000002903c9e5?xsec_token=ABtA1lHcWOpKp1b12cAhO6jRkFF19URicRdEBORp4swe8=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Wedding+Work+4 ", "https://via.placeholder.com/300x200?text=Wedding+Work+5 "] },
+            { name: "孙倩", gender: "女", personality: "外向", style: "婚礼", distance: "3 公里", works: ["https://www.xiaohongshu.com/explore/6523abf1000000002101ede8?xsec_token=ABZhNlsnfHNQMtUBk1WQv3y9Vcqylk1e00JHsjNzv8rqk=&xsec_source=pc_search&source=unknown "] },
+            { name: "周晓晓", gender: "女", personality: "内向", style: "婚礼", distance: "2 公里", works: ["https://www.xiaohongshu.com/explore/675fdda5000000000b00da79?xsec_token=ABwxWRaI85zs6Rta7j47TF0rS1oSktJ0o_HMmbr8Fn1e8=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Portrait+Work+2 ", "https://via.placeholder.com/300x200?text=Portrait+Work+3 "] },
+            { name: "孙依依", gender: "男", personality: "内向", style: "婚礼", distance: "3 公里", works: ["https://www.xiaohongshu.com/explore/656df887000000000703803e?xsec_token=ABVhL29V7CftpNddmSlY6GNHbJwEottDCCJ2mdiX1sUZs=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Portrait+Work+5 "] },
+            { name: "潇潇", gender: "女", personality: "内向", style: "婚礼", distance: "4 公里", works: ["https://www.xiaohongshu.com/explore/668a5962000000001c025d9c?xsec_token=ABKDpXoAkWK3cQcSKwxPOSRqZnftdVNJAzZyhNPCq39Lo=&xsec_source=pc_search&source=unknown "] },
+            { name: "孙志超", gender: "男", personality: "外向", style: "婚礼", distance: "6 公里", works: ["https://www.xiaohongshu.com/explore/645b56ad000000001303d412?xsec_token=ABbeogWd8BTC38AvH_lnwDNV7ViduX-GKB0B5G3C1ZiPE=&xsec_source=pc_search&source=unknown"] },
+            // 产品风格
+            { name: "周明", gender: "男", personality: "外向", style: "产品", distance: "5 公里", works: ["https://www.xiaohongshu.com/explore/667d327a000000001c03599a?xsec_token=ABbLdRx4AMMzb99LW1IwYi3qwga8DvC5ykT-dYGxjlQo8=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Product+Work+2 "] },
+            { name: "吴敏", gender: "女", personality: "内向", style: "产品", distance: "2 公里", works: ["https://www.xiaohongshu.com/explore/6719fd170000000026037fd2?xsec_token=AB_Gd04vCN0HgSitCsfTyG_-vWeZ-4WD9vYqNjLKEj0oc=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Product+Work+4 ", "https://via.placeholder.com/300x200?text=Product+Work+5 "] },
+            { name: "郑涛", gender: "男", personality: "外向", style: "产品", distance: "3 公里", works: ["https://www.xiaohongshu.com/explore/668c9cbb00000000250024dd?xsec_token=AB6qrq5nVFNKTqmtVtEbSTbaBa6LHiOrwoZ9rEnuQOpMY=&xsec_source=pc_search&source=unknown "] },
+            { name: "蔡文轩", gender: "男", personality: "内向", style: "产品", distance: "5 公里", works: ["https://www.xiaohongshu.com/explore/647642a80000000011011103?xsec_token=ABw3-pBYcr8UVr37J0pPF54-xypS1Imkl8HGzygKFxHZc=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Product+Work+2 "] },
+            { name: "刘静安", gender: "女", personality: "内向", style: "产品", distance: "2 公里", works: ["https://www.xiaohongshu.com/explore/65e4682e000000000400322e?xsec_token=ABf-1-JIHqWHNZl4lwqKAoyXEMOgwwikZdPO6hd1qCnmQ=&xsec_source=pc_search&source=unknown ", "https://via.placeholder.com/300x200?text=Product+Work+4 ", "https://via.placeholder.com/300x200?text=Product+Work+5 "] },
+            { name: "卫成功", gender: "男", personality: "内向", style: "产品", distance: "3 公里", works: ["https://www.xiaohongshu.com/explore/64c31532000000000a01ab04?xsec_token=ABDcR1bhz2tb6HWPyGhDvHu8tbsVwuRqFEfIZ3-M6_7QE=&xsec_source=pc_search&source=unknown "] },
+            { name: "孙欣欣", gender: "女", personality: "外向", style: "婚礼", distance: "4 公里", works: ["https://www.xiaohongshu.com/explore/66613a4c00000000150086fe?xsec_token=ABpfmpYSoDp-_n7Rek5E3A8ApdJwtiyHc19rGSWwLfMT4=&xsec_source=pc_search&source=unknown"] },
+            { name: "王一一", gender: "女", personality: "外向", style: "婚礼", distance: "6 公里", works: ["https://www.xiaohongshu.com/explore/64182251000000000800c77f?xsec_token=ABBd7Ozp7Yt97C6wd0uazbB4yP3czsmaLWdA6KSP5czZw=&xsec_source=pc_search&source=unknown"] },
+            ];
+// 绑定事件
+        document.getElementById('filter-button').addEventListener('click', filterPhotographers);
+        document.getElementById('back-to-login').addEventListener('click', () => goBack('filter-section'));
+        document.getElementById('back-to-filter').addEventListener('click', () => goBack('filter-section'));
+        document.getElementById('next-to-service').addEventListener('click', showServiceSection);
+        document.getElementById('back-to-results').addEventListener('click', () => goBack('photographer-results'));
+        document.getElementById('submit-order').addEventListener('click', submitOrder);
+        document.getElementById('close-modal').addEventListener('click', () => document.getElementById('works-modal').style.display = 'none');   
+        
+        // 返回登录界面
+        document.getElementById('back-to-login').addEventListener('click', () => {
+            showPage('login');
+        });
+
+        // 筛选摄影师
+        function filterPhotographers() {
+            const gender = document.getElementById('gender').value;
+            const personality = document.getElementById('personality').value;
+            const style = document.getElementById('style').value;
+
+            const filteredPhotographers = photographers.filter(photographer => {
+                if (gender !== 'all' && photographer.gender !== gender) return false;
+                if (personality !== 'all' && photographer.personality !== personality) return false;
+                if (style !== 'all' && photographer.style !== style) return false;
+                return true;
+            });
+
+            const photographerList = document.getElementById('photographer-list');
+            photographerList.innerHTML = '';
+
+            if (filteredPhotographers.length < 1) {
+                alert('很抱歉，符合您要求的摄影师不足 1 位，请尝试其他筛选条件。');
+                return;
+            }
+
+            const selectedPhotographers = filteredPhotographers.slice(0, 3);
+
+            selectedPhotographers.forEach(photographer => {
+                const div = document.createElement('div');
+                div.classList.add('photographer');
+                div.innerHTML = `
+                    <h3>${photographer.name}</h3>
+                    <p>性别: ${photographer.gender}</p>
+                    <p>性格: ${photographer.personality}</p>
+                    <p>擅长风格: ${photographer.style}</p>
+                    <p>距离您: ${photographer.distance}</p>
+                    <button onclick="viewWorks('${photographer.name}')">查看作品</button>
+                    <input type="checkbox" name="selected-photographer" value="${photographer.name}"> 选择
+                `;
+                photographerList.appendChild(div);
+            });
+
+            document.getElementById('filter-section').classList.remove('active');
+            document.getElementById('photographer-results').classList.add('active');
+        }
+
+// 查看作品
+function viewWorks(name) {
+    const photographer = photographers.find(p => p.name === name);
+    if (photographer.works.length > 0) {
+        // 跳转到第一个作品链接
+        window.open(photographer.works[0], '_blank');
+    } else {
+        alert('该摄影师暂无作品展示。');
+    }
+}
+        // 显示服务选择界面
+        function showServiceSection() {
+            const selectedPhotographers = Array.from(document.querySelectorAll('input[name="selected-photographer"]:checked')).map(input => input.value);
+            if (selectedPhotographers.length === 0) {
+                alert('请至少选择一位摄影师。');
+                return;
+            }
+            document.getElementById('photographer-results').classList.remove('active');
+            document.getElementById('service-section').classList.add('active');
+        }
+
+        // 返回上一步
+        function goBack(sectionId) {
+            const currentSection = document.querySelector('section.active');
+            currentSection.classList.remove('active');
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // 提交订单
+        function submitOrder() {
+            const selectedPhotographers = Array.from(document.querySelectorAll('input[name="selected-photographer"]:checked')).map(input => input.value);
+            const makeupService = document.getElementById('makeup-service').value;
+            const selectedEquipment = Array.from(document.getElementById('equipment').selectedOptions).map(option => option.text);
+
+            let orderInfo = `您选择的摄影师: ${selectedPhotographers.join(', ')}\n`;
+            orderInfo += `化妆服务: ${makeupService === 'none' ? '无' : makeupService}\n`;
+            orderInfo += `选择的设备: ${selectedEquipment.length > 0 ? selectedEquipment.join(', ') : '无'}`;
+
+            alert(orderInfo);
+        }
+
+        // 关闭作品展示模态框
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('works-modal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
